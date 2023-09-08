@@ -1,6 +1,8 @@
 FROM python:3.10-alpine3.17
 
-WORKDIR /content
 ARG REQUIREMENTS
+WORKDIR /content
+COPY . .
+
 
 RUN pip install ${REQUIREMENTS}
