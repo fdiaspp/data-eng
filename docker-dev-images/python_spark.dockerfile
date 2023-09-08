@@ -1,7 +1,6 @@
 FROM ubuntu:20.04 AS base
 
 WORKDIR /content
-COPY . .
 
 ENV SPARK_VERSION 3.3.2
 ENV HADOOP_VERSION 3
@@ -17,6 +16,7 @@ ENV SPARK_HOME /content/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}
 ENV PATH $PATH:${SPARK_HOME}/bin
 
 FROM base
+COPY . .
 ARG REQUIREMENTS
 
 RUN pip install ${REQUIREMENTS}
