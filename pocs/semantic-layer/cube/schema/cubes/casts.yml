@@ -1,0 +1,55 @@
+cubes:
+  - name: casts
+    sql_table: public.casts
+    data_source: default
+
+    joins:
+      - name: movies
+        sql: "{CUBE}.movie_id = {movies}.id"
+        relationship: many_to_one
+
+      - name: people
+        sql: "{CUBE}.person_id = {people}.id"
+        relationship: many_to_one
+
+      - name: jobs
+        sql: "{CUBE}.job_id = {jobs}.id"
+        relationship: many_to_one
+
+    dimensions:
+      - name: role
+        sql: role
+        type: string
+        primary_key: true
+
+      - name: position
+        sql: position
+        type: string
+        primary_key: true        
+
+      - name: movie_id
+        sql: movie_id
+        type: number
+        primary_key: true
+        public: false
+
+      - name: person_id
+        sql: movie_id
+        type: number
+        primary_key: true
+        public: false
+
+      - name: job_id
+        sql: movie_id
+        type: number
+        primary_key: true
+        public: false                    
+
+    measures:
+      - name: count
+        type: count
+
+    pre_aggregations:
+      # Pre-aggregation definitions go here.
+      # Learn more in the documentation: https://cube.dev/docs/caching/pre-aggregations/getting-started
+

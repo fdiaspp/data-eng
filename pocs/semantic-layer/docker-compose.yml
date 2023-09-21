@@ -1,0 +1,91 @@
+version: "3.6"
+services:
+  database:
+    build:
+      context: ./postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=example
+      - PGDATA=/var/lib/postgresql/data
+    volumes:
+      - database_data:/var/lib/postgresql/data
+
+
+  cube_api:
+    restart: always
+    image: cubejs/cube:v0.33.59
+    ports:
+      - 4000:4000
+      - 15432:15432
+    environment:
+      - CUBEJS_DB_TYPE=postgres
+      - CUBEJS_DB_HOST=database
+      - CUBEJS_DB_NAME=omdb
+      - CUBEJS_DB_USER=postgres
+      - CUBEJS_DB_PASS=example
+      - CUBEJS_API_SECRET=secret
+      - CUBEJS_CUBESTORE_HOST=cubestore_router  
+      - CUBEJS_DEV_MODE=true    
+    volumes:
+      - ./cube:/cube/conf
+    depends_on:
+      - cube_refresh_worker
+      - cubestore_router
+      - cubestore_worker_1
+      - cubestore_worker_2
+ 
+  cube_refresh_worker:
+    restart: always
+    image: cubejs/cube:v0.33.59
+    environment:
+      - CUBEJS_DB_TYPE=postgres
+      - CUBEJS_DB_HOST=database
+      - CUBEJS_DB_NAME=omdb
+      - CUBEJS_DB_USER=postgres
+      - CUBEJS_DB_PASS=example
+      - CUBEJS_CUBESTORE_HOST=cubestore_router
+      - CUBEJS_API_SECRET=secret
+      - CUBEJS_REFRESH_WORKER=true
+    volumes:
+      - ./cube:/cube/conf
+ 
+  cubestore_router:
+    restart: always
+    image: cubejs/cubestore:v0.33.59
+    environment:
+      - CUBESTORE_WORKERS=cubestore_worker_1:10001,cubestore_worker_2:10002
+      - CUBESTORE_REMOTE_DIR=/cube/data
+      - CUBESTORE_META_PORT=9999
+      - CUBESTORE_SERVER_NAME=cubestore_router:9999
+    volumes:
+      - ./cube/.cubestore:/cube/data
+ 
+  cubestore_worker_1:
+    restart: always
+    image: cubejs/cubestore:v0.33.59
+    environment:
+      - CUBESTORE_WORKERS=cubestore_worker_1:10001,cubestore_worker_2:10002
+      - CUBESTORE_SERVER_NAME=cubestore_worker_1:10001
+      - CUBESTORE_WORKER_PORT=10001
+      - CUBESTORE_REMOTE_DIR=/cube/data
+      - CUBESTORE_META_ADDR=cubestore_router:9999
+    volumes:
+      - ./cube/.cubestore:/cube/data
+    depends_on:
+      - cubestore_router
+ 
+  cubestore_worker_2:
+    restart: always
+    image: cubejs/cubestore:v0.33.59
+    environment:
+      - CUBESTORE_WORKERS=cubestore_worker_1:10001,cubestore_worker_2:10002
+      - CUBESTORE_SERVER_NAME=cubestore_worker_2:10002
+      - CUBESTORE_WORKER_PORT=10002
+      - CUBESTORE_REMOTE_DIR=/cube/data
+      - CUBESTORE_META_ADDR=cubestore_router:9999
+    volumes:
+      - ./cube/.cubestore:/cube/data
+    depends_on:
+      - cubestore_router      
+volumes:
+  database_data:

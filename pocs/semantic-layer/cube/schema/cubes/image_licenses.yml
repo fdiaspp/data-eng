@@ -1,0 +1,24 @@
+cubes:
+  - name: image_licenses
+    sql_table: public.image_licenses
+    data_source: default
+
+    joins: []
+
+    dimensions:
+      - name: source
+        sql: source
+        type: string
+
+      - name: author
+        sql: author
+        type: string
+
+    measures:
+      - name: count
+        type: count
+
+    pre_aggregations:
+      # Pre-aggregation definitions go here.
+      # Learn more in the documentation: https://cube.dev/docs/caching/pre-aggregations/getting-started
+

@@ -1,0 +1,29 @@
+cubes:
+  - name: movie_abstracts_de
+    sql_table: public.movie_abstracts_de
+    data_source: default
+
+    joins:
+      - name: movies
+        sql: "{CUBE}.movie_id = {movies}.id"
+        relationship: many_to_one
+
+    dimensions:
+      - name: abstract
+        sql: abstract
+        type: string
+
+      - name: movie_id
+        sql: movie_id
+        type: number
+        primary_key: true
+        public: false        
+
+    measures:
+      - name: count
+        type: count
+
+    pre_aggregations:
+      # Pre-aggregation definitions go here.
+      # Learn more in the documentation: https://cube.dev/docs/caching/pre-aggregations/getting-started
+

@@ -1,0 +1,30 @@
+cubes:
+  - name: people_aliases
+    sql_table: public.people_aliases
+    data_source: default
+
+    joins:
+      - name: people
+        sql: "{CUBE}.person_id = {people}.id"
+        relationship: many_to_one
+
+    dimensions:
+      - name: name
+        sql: name
+        type: string
+        primary_key: true
+
+      - name: person_id
+        sql: person_id
+        type: number
+        primary_key: true
+        public: false        
+
+    measures:
+      - name: count
+        type: count
+
+    pre_aggregations:
+      # Pre-aggregation definitions go here.
+      # Learn more in the documentation: https://cube.dev/docs/caching/pre-aggregations/getting-started
+

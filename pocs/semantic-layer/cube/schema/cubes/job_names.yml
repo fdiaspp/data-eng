@@ -1,0 +1,34 @@
+cubes:
+  - name: job_names
+    sql_table: public.job_names
+    data_source: default
+
+    joins:
+      - name: jobs
+        sql: "{CUBE}.job_id = {jobs}.id"
+        relationship: many_to_one
+
+    dimensions:
+      - name: language
+        sql: language
+        type: string
+        primary_key: true
+
+      - name: name
+        sql: name
+        type: string
+
+      - name: job_id
+        sql: job_id
+        type: number
+        primary_key: true
+        public: false        
+
+    measures:
+      - name: count
+        type: count
+
+    pre_aggregations:
+      # Pre-aggregation definitions go here.
+      # Learn more in the documentation: https://cube.dev/docs/caching/pre-aggregations/getting-started
+

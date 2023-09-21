@@ -1,0 +1,53 @@
+cubes:
+  - name: movies
+    sql_table: public.movies
+    data_source: default
+
+    joins: []
+
+    dimensions:
+      - name: id
+        sql: id
+        type: number
+        primary_key: true
+
+      - name: kind
+        sql: kind
+        type: string
+
+      - name: budget
+        sql: budget
+        type: string
+
+      - name: revenue
+        sql: revenue
+        type: string
+
+      - name: vote_average
+        sql: vote_average
+        type: string
+
+      - name: homepage
+        sql: homepage
+        type: string
+
+      - name: name
+        sql: name
+        type: string
+
+      - name: date
+        sql: date
+        type: time
+
+    measures:
+      - name: count
+        type: count
+
+      - name: votes_count
+        sql: votes_count
+        type: sum
+
+    pre_aggregations:
+      # Pre-aggregation definitions go here.
+      # Learn more in the documentation: https://cube.dev/docs/caching/pre-aggregations/getting-started
+

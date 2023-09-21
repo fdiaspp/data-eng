@@ -1,0 +1,36 @@
+cubes:
+  - name: movie_references
+    sql_table: public.movie_references
+    data_source: default
+
+    joins:
+      - name: movies
+        sql: "{CUBE}.movie_id = {movies}.id"
+        relationship: many_to_one
+
+    dimensions:
+      - name: type
+        sql: type
+        type: string
+        primary_key: true
+
+      - name: movie_id
+        sql: movie_id
+        type: number
+        primary_key: true
+        public: false        
+
+      - name: reference_id
+        sql: reference_id
+        type: number
+        primary_key: true
+        public: false          
+
+    measures:
+      - name: count
+        type: count
+
+    pre_aggregations:
+      # Pre-aggregation definitions go here.
+      # Learn more in the documentation: https://cube.dev/docs/caching/pre-aggregations/getting-started
+

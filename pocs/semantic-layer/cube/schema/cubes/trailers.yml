@@ -1,0 +1,43 @@
+cubes:
+  - name: trailers
+    sql_table: public.trailers
+    data_source: default
+
+    joins:
+      - name: movies
+        sql: "{CUBE}.movie_id = {movies}.id"
+        relationship: many_to_one
+
+    dimensions:
+      - name: key
+        sql: key
+        type: string
+
+      - name: language
+        sql: language
+        type: string
+
+      - name: source
+        sql: source
+        type: string
+
+      - name: movie_id
+        sql: movie_id
+        type: number
+        primary_key: true
+        public: false
+
+      - name: trailer_id
+        sql: trailer_id
+        type: number
+        primary_key: true
+        public: false                
+
+    measures:
+      - name: count
+        type: count
+
+    pre_aggregations:
+      # Pre-aggregation definitions go here.
+      # Learn more in the documentation: https://cube.dev/docs/caching/pre-aggregations/getting-started
+
